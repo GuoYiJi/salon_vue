@@ -1,0 +1,65 @@
+
+.clearfix {
+  #{&}:after, #{&}:before {
+    display: block;
+    content: "";
+  }
+  #{&}:after {
+    clear: both;
+  }
+}
+
+
+.bg {
+  @at-root #{&}-light {
+    background-color: #f5f5f5;
+  }
+}
+
+.mt40 {
+  margin-top: 40rem / $rem;
+}
+
+
+// 单行文字截断
+.nowrap {
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+// 超出两行文字则截断
+.nowrap-double {
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+// 边框
+.border {
+  border-style: solid;
+  border-color: $border-color-default;
+  border-width: 1px;
+  @at-root {
+    #{&}-b {
+      border-bottom-color: $border-color-default;
+      
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+    }
+    #{&}-t {
+      border-top-color: $border-color-default;
+      border-top-style: solid;
+      border-top-width: 1px;
+    }
+
+  }
+}
+
+
+
+
+

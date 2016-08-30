@@ -1,0 +1,22 @@
+
+
+
+@mixin box() {
+  display: flex;
+}
+
+@mixin box-flex($flex) {
+  flex: $flex;
+}
+
+// 水平方向的对齐方式
+// start | end | center | justify
+@mixin box-pack($pack, $important: '') {
+  -moz-box-pack: #{$pack $important};
+  -webkit-box-pack: #{$pack $important};
+  //-o-box-pack: $pack;
+}
+@mixin box-align($align){
+  -webkit-box-align: $align;
+  -webkit-box-orient: horizontal;
+}

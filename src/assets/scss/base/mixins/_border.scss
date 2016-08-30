@@ -1,0 +1,21 @@
+
+
+@mixin setBorder($color, $size, $dire: '') {
+  @if $dire {
+    &:after {
+      border-#{$dire}-color: $color;
+      border-#{$dire}-width: $size;
+      border-#{$dire}-style: solid;
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  } @else {
+
+    border-color: $color;
+    border-weight: $size;
+    border-style: solid;
+  }
+}
