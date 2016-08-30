@@ -80,20 +80,21 @@
 		props: ['room'],
 		data(){
 			return {
-				messages: {}
+				messages: []
 			}
 		},
 		methods: {
 			queryMessage(realtimeObj, msg, limit){
-				realtimeObj.createIMClient('7c4ddbda0d19c84bdd9b687ff5a71a18').then((session) => {
-					session.createConversation().queryMessages({
-						t: msg ? msg.timestamp : Date.now(),
-						limit,
-						mid: msg ? msg.msgId : ''
-					}).then((data) => {
-						const _arr = data
-						this.messages = _arr.concat(this.messages)
-					})
+				this.room.queryMessages({
+					t: msg ? msg.timestamp : Date.now(),
+					limit,
+					mid: msg ? msg.msgId : ''
+				}).then((data) => {
+					if (this.messages.length < 1) {
+						this.messages = data
+					}
+					const _arr = data
+					this.messages = _arr.concat(this.messages)
 				})
 			}
 		},
@@ -102,9 +103,9 @@
 				if (!newVal) {
 					return
 				}
-				// this.messages = []
+				this.messages = []
 				this.queryMessage(this.$parent.realtimeObj, null, 20)
-				newVal.receive((data) => {
+				newVal.emit('message', (data) => {
 					console.log(data)
 				})
 			}

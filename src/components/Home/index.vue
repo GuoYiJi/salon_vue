@@ -86,7 +86,7 @@
         </div>
         <ul class="group">
           <template v-for="item in convs">
-          <li class="group__items clearfix">
+          <li class="group__items clearfix" @click="selectConv($index)">
             <img :src="item._attributes.cover" alt="">
             <p>{{item.name}}</p>
           </li>
@@ -142,6 +142,9 @@
         })
         this.query()
       },
+      selectConv(index){
+        console.log(index)
+      },
       query(){
         const _self = this
         _self.realtimeObj.createIMClient('7c4ddbda0d19c84bdd9b687ff5a71a18').then((session) => {
@@ -183,7 +186,7 @@
           return
         }
         const _self = this
-        const salonId = newVal._attributes.salon_id
+        const salonId = newVal._attributes.attr.salon_id
         _self.realtimeObj.createIMClient('7c4ddbda0d19c84bdd9b687ff5a71a18').then((session) => {
           session.createConversation({ members: [salonId] }).then((salonRoom) => {
             if (salonRoom) {
@@ -199,18 +202,6 @@
             }
           })
         })
-        // _self.realtimeObj.createIMClient('7c4ddbda0d19c84bdd9b687ff5a71a18').then((session) => {
-        //   session.createConversation(salonId).then((salonRoom) => {
-        //     if (salonRoom) {
-        //       _self.salonRoom = salonRoom
-        //     }
-        //   })
-        // })
-        // _self.realtimeObj.createIMClient('7c4ddbda0d19c84bdd9b687ff5a71a18').createConversation(newVal.objectId, (room) => {
-        //   if (room) {
-        //     _self.room = room
-        //   }
-        // })
       }
     }
   }
