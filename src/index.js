@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import VueValidator from 'vue-validator'
 import { sync } from 'vuex-router-sync'
 import store from './vuex/store'
 import filters from './utils/filters'
@@ -13,6 +14,7 @@ import './assets/scss/quick.scss'
 Object.keys(filters).forEach( k => Vue.filter(k, filters[k]) )
 
 Vue.use(VueRouter)
+Vue.use(VueValidator)
 
 const router = new VueRouter({
   history: true,

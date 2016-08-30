@@ -3,9 +3,8 @@ import Vuex from 'vuex'
 import createLogger from 'vuex/logger'
 
 import user from './modules/user'
-import topic from './modules/topic'
-import pk from './modules/pk'
-import article from './modules/article'
+import showmsg from './modules/showmsg'
+import auth from './modules/auth'
 
 const debug = process.env.NODE_ENV !== 'production'
 Vue.use(Vuex)
@@ -15,9 +14,8 @@ Vue.config.warnExpressionErrors = false
 export default new Vuex.Store({
   modules: {
     user,
-    topic,
-    pk,
-    article
+    showmsg,
+    auth
   },
   strict: debug, 
   middlewares: debug ? [createLogger()] : []

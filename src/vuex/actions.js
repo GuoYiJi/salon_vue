@@ -1,5 +1,6 @@
 import api from '../api'
 import * as types from './types'
+import { saveCookie } from '../utils/authService'
 
 
 export const getUser = ({dispatch}, id) => {
@@ -51,13 +52,33 @@ export const getPk = ({dispatch}, id, to_id) => {
 export const getArticle = ({dispatch}, id) => {
   api.getArticle(id).then((response) => {
     dispatch(types.GET_ARTICLE, response.data.data)
+  }, response => {
+
   })
 }
 
+export const showMsg = ({dispatch}, content,type='error') => {
+  dispatch(types.SHOW_MSG, {content:content,type:type})
+}
 
 // login
-export const checkLogin = ({dispatch}, user, pass) => {
-  api.checkLogin(user, pass).then((response) => {
-    api.loginUser(response.data.data.access_token)
+export const checkLogin = (store, userInfo) => {
+  api.checkLogin(userInfo.user, userInfo.password).then(response => {
+    const token = response.data.data.access_token
+    api.loginUser(token).then(response => {
+      saveCookie('token', token)
+      getUserInfo(store, response.data.data)
+      store.dispatch(types.LOGIN_SUCCESS, token)
+      showMsg(store, '登录成功', 'success')
+      store.router.go({path: '/home'})
+    }, response => {
+      showMsg(store,response.data.error_msg || '登录失败')
+    })
+  }, response => {
+    showMsg(store,response.data.error_msg || '登录失败')
   })
+}
+
+export const getUserInfo = ({dispatch}, data) => {
+  dispatch(types.USERINFO_SUCCESS, { user: data })
 }

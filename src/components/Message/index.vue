@@ -75,3 +75,49 @@
 		</div>
 	</div>
 </template>
+<script>
+	export default {
+		props: ['room'],
+		data(){
+			return {
+				messages: {}
+			}
+		},
+		methods: {
+			queryMessage(realtimeObj, msg, limit){
+				realtimeObj.createIMClient('7c4ddbda0d19c84bdd9b687ff5a71a18').then((session) => {
+					session.createConversation().queryMessages({
+						t: msg ? msg.timestamp : Date.now(),
+						limit,
+						mid: msg ? msg.msgId : ''
+					}).then((data) => {
+						const _arr = data
+						this.messages = _arr.concat(this.messages)
+					})
+				})
+			}
+		},
+		watch: {
+			'room': function (newVal, oldVal){
+				if (!newVal) {
+					return
+				}
+				// this.messages = []
+				this.queryMessage(this.$parent.realtimeObj, null, 20)
+				newVal.receive((data) => {
+					console.log(data)
+				})
+			}
+		}
+	}
+</script>
+
+
+
+
+
+
+
+
+
+

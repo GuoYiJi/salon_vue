@@ -48,26 +48,51 @@
 			<img src="./logowrap@3x.png" height="80" width="80" alt="" class="logo__pic">
 			<p>从此以后，你和书将前所未有接近</p>
 		</div>
-		<form class="login__form" action="">
-			<div class="input-group"><input class="input-txt" type="text" name="user" placeholder="手机"></div>
-			<div class="input-group"><input class="input-txt" type="password" name="password" placeholder="密码"></div>
-			<div class="input-group"><input class="input-btn" type="submit" value="登录" @click="a()"></div>
-		</form>
+		<validator name="signinValidation">
+			<form class="login__form" @submit.prevent="a($signinValidation)" novalidate>
+				<div class="input-group"><input class="input-txt" type="text" name="user" placeholder="手机" v-model="user.user"></div>
+				<div class="input-group"><input class="input-txt" type="password" name="password" placeholder="密码" v-model="user.password"></div>
+				<div class="input-group"><input class="input-btn" type="submit" value="登录" :disabled="$signinValidation.invalid"></div>
+			</form>
+		</validator>
 	</div>
 </template>
 <script>
 	import { checkLogin } from '../../vuex/actions'
+	import { getCookie } from '../../utils/authService'
 	export default {
 		vuex: {
+			getters: {
+				token: ({auth}) => auth.token,
+				user: ({auth}) => auth.user
+			},
 			actions: { checkLogin }
 		},
+		data(){
+			return {
+				user: {
+					user: '',
+					password: ''
+				}
+			}
+		},
+		route: {
+
+			activate(transition){
+				let token = getCookie('token')
+				!token ? transition.redirect('/home') : transition.next()
+			}
+		},
 		methods: {
-			a(){
-				alert(1)
+			a(signinValidation){
+				if (signinValidation.valid) {
+					this.checkLogin(this.user)
+				}
+				
 			}
 		},
 		ready(){
-			this.checkLogin('18219181051', 'Mqpzla150')
+			
 		}
 	}
 </script>

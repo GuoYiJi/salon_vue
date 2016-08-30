@@ -5,3 +5,6 @@ export const API_MAGIC = debug ? 'https://dev-magic.beautifulreading.com' : 'htt
 
 export const API_RIO = debug ? 'https://dev-rio.beautifulreading.com' : 'https://api-rio.beautifulreading.com'
 export const API_SALON = debug ? 'http://salon.beautifulreading.com' : 'http://salon.beautifulreading.com'
+
+
+export const CookieDomain = debug ? 'salon' : ''
