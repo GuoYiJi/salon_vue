@@ -113,11 +113,13 @@
   import Message from '../Message/index.vue'
   import { getCookie } from '../../utils/authService'
   import { Realtime } from 'leancloud-realtime'
+  import { getGroup, checkGroup } from '../../vuex/actions'
   export default {
     components: { Comment, Addcomment, Message },
     data(){
       return {
         realtimeObj: {},
+        IMClient: null,
         convs: {},
         conv: {},
         room: null,
@@ -127,7 +129,8 @@
     vuex: {
       getters: {
         user: ({auth}) => auth.user
-      }
+      },
+      actions: { getGroup, checkGroup }
     },
     created(){
       // AV.initialize('FVW3q1g4e8RXl11WC5NoBzzV-gzGzoHsz', 'Y0rmrXbkLGQcqWyDDh7enAI1')
@@ -138,19 +141,33 @@
     methods: {
       init(){
         this.realtimeObj = new Realtime({
+          // appId: '7JMVeXNYgCdHmTIPrwA78DBB-gzGzoHsz'
           appId: 'FVW3q1g4e8RXl11WC5NoBzzV-gzGzoHsz'
         })
+        this.IMClient = this.realtimeObj.createIMClient('7c4ddbda0d19c84bdd9b687ff5a71a18')
         this.query()
+
       },
       selectConv(index){
         console.log(index)
       },
       query(){
         const _self = this
-        _self.realtimeObj.createIMClient('7c4ddbda0d19c84bdd9b687ff5a71a18').then((session) => {
+        _self.IMClient.then((session) => {
           session.getQuery().contains('attr.kind', 'group').contains('attr.enable', 'true').containsMembers(['7c4ddbda0d19c84bdd9b687ff5a71a18']).find().then((data) => {
-            this.convs = data
-            this.conv = data[0]
+            this.getGroup(data)
+            this.checkGroup(0)
+            data[0].queryMessages({
+              limit: 20
+            }).then((data) => {
+            })
+          })
+        })
+
+        // 接收消息
+        _self.IMClient.then((test) => {
+          test.on('message', function (message, conversation){
+            console.log(conversation)
           })
         })
         // return new Promise((resolve, reject) => {
@@ -174,9 +191,10 @@
     route: {
       activate(transition){
         let token = getCookie('token')
-        if (!token) {
-          transition.redirect('/login')
-        }
+        console.log(token)
+        // if (!token) {
+        //   transition.redirect('/login')
+        // }
         transition.next()
       }
     },
@@ -187,7 +205,7 @@
         }
         const _self = this
         const salonId = newVal._attributes.attr.salon_id
-        _self.realtimeObj.createIMClient('7c4ddbda0d19c84bdd9b687ff5a71a18').then((session) => {
+        _self.IMClient.then((session) => {
           session.createConversation({ members: [salonId] }).then((salonRoom) => {
             if (salonRoom) {
               _self.salonRoom = salonRoom
@@ -195,7 +213,7 @@
           })
         })
 
-        _self.realtimeObj.createIMClient('7c4ddbda0d19c84bdd9b687ff5a71a18').then((session) => {
+        _self.IMClient.then((session) => {
           session.createConversation({ members: [newVal.id] }).then((room) => {
             if (room) {
               _self.room = room

@@ -82,3 +82,10 @@ export const checkLogin = (store, userInfo) => {
 export const getUserInfo = ({dispatch}, data) => {
   dispatch(types.USERINFO_SUCCESS, { user: data })
 }
+
+export const getGroup = ({dispatch}, data) => {
+  dispatch(types.GET_GROUPS, data)
+}
+export const checkGroup = ({dispatch}, index) => {
+  dispatch(types.GET_GROUP, index)
+}
